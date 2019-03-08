@@ -1,0 +1,77 @@
+To Create Table:-  create table web (client_ip string, full_request_date string, day int, month string, month_num int, year int, hour int, minute int, second int, method string, uri string, http_status_code string, bytes_returned int, referrer string, user_agent string, browser string) row format delimited fields terminated by '\t';
+
+To load the Table:-
+load data local inpath '/home/hduser/Desktop/mmc_weblog1' into table web;
+
+
+
+
+Analysis 1)
+
+create table ana1 as select user_agent, COUNT(client_ip) as cnt from web group by user_agent order by cnt desc;        
+select * from ana1 limit 1; 
+
+
+
+Analysis 2)
+
+create table ana2 as select http_status_code, COUNT(client_ip) as cnt from web group by http_status_code order by cnt desc;
+
+select * from ana2 limit 1; 
+
+
+
+Analysis 3)
+
+create table ana3 as select browser, COUNT(client_ip) as cnt from web group by browser order by cnt desc;
+select * from ana3 limit 1;
+
+
+
+Analysis 4)
+
+create table anai as select http_status_code, year, COUNT(client_ip) as cnt from web where year == 2011 group by http_status_code,year order by cnt desc limit 3;
+
+create table anaii as select http_status_code, year, COUNT(client_ip) as cnt from web where year == 2012 group by http_status_code,year order by cnt desc limit 3;
+
+select * from anai union all select * from anaii;
+
+
+
+Analysis 5)
+
+create table analyse1 as select client_ip, year, COUNT(user_agent) as cnt from web where year == 2011 group by client_ip,year order by cnt desc limit 3;
+
+create table analyse2 as select client_ip, year, COUNT(user_agent) as cnt from web where year == 2012 group by client_ip,year order by cnt desc limit 3;
+
+select * from analyse1 union all select * from analyse2;
+
+
+
+Analysis 6)
+
+create table ana6 as select client_ip, COUNT(http_status_code) as cnt from web group by client_ip order by cnt desc limit 3;
+
+select * from ana6;
+
+create table analyse3 as select client_ip,http_status_code,COUNT(http_status_code) as cnt from web where client_ip == '361.631.17.30' group by client_ip, http_status_code order by cnt desc limit 3;
+
+create table analyse4 as select client_ip,http_status_code,COUNT(http_status_code) as cnt from web where client_ip == '13.35.602.684' group by client_ip, http_status_code order by cnt desc limit 3;
+
+create table analyse4 as select client_ip,http_status_code,COUNT(http_status_code) as cnt from web where client_ip == '683.615.622.618' group by client_ip, http_status_code order by cnt desc limit 3;
+
+
+
+Analysis 7)
+
+create table ana7 as select client_ip,http_status_code,COUNT(http_status_code) as cnt from web group by client_ip, http_status_code order by cnt desc limit 20000;
+
+select * from ana7;
+
+
+
+Analysis 8)
+
+create table ana8 as select client_ip,COUNT(client_ip) as cnt from web group by client_ip order by cnt desc;
+
+select * from ana8;
